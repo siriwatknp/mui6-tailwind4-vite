@@ -1,3 +1,4 @@
+import { CacheProvider } from "@emotion/react";
 import {
   createTheme,
   ThemeProvider,
@@ -13,6 +14,34 @@ import {
 } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import createCache, { StylisPlugin } from "@emotion/cache";
+
+const wrapInLayer: (layerName: string) => StylisPlugin =
+  (layerName) => (node) => {
+    // if we're not at the root of a <style> tag, leave the tree intact
+    // if the node is an @layer rule, leave it intact
+    if (node.root || node.type === "@layer") return;
+
+    // if we're at the root, replace node with `@layer layerName { node }`
+    const child = { ...node, parent: node, root: node };
+    Object.assign(node, {
+      children: [child],
+      length: 6,
+      parent: null,
+      props: [layerName],
+      return: "",
+      root: null,
+      type: "@layer",
+      value: `@layer ${layerName}`,
+    });
+  };
+
+const cache = createCache({
+  key: "css",
+  // By default, Tailwind has layer "@components" configured
+  // from the main CSS file, so this will work.
+  stylisPlugins: [wrapInLayer("components")],
+});
 
 function AppContent() {
   const { mode, setMode } = useColorScheme();
@@ -90,9 +119,11 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <AppContent />
-    </ThemeProvider>
+    <CacheProvider value={cache}>
+      <ThemeProvider theme={theme}>
+        <AppContent />
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 

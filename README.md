@@ -25,3 +25,7 @@ The configuration requires a custom cache to the Emotion.
 ```bash
 pnpm install @emotion/cache
 ```
+
+## Dark mode
+
+Follow [Tailwind docs](https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually) and update Material UI to use `.dark` selector.

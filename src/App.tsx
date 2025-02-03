@@ -48,6 +48,7 @@ function AppContent() {
 
   return (
     <Box
+      className="bg-gray-50 dark:bg-gray-900"
       sx={{
         bgcolor: "background.default",
         color: "text.primary",
@@ -112,6 +113,9 @@ function AppContent() {
 
 function App() {
   const theme = createTheme({
+    cssVariables: {
+      colorSchemeSelector: "class",
+    },
     colorSchemes: {
       light: true,
       dark: true,

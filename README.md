@@ -26,6 +26,70 @@ The configuration requires a custom cache to the Emotion.
 pnpm install @emotion/cache
 ```
 
+```diff
+diff --git a/src/App.tsx b/src/App.tsx
+index bf740f6..154635b 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,3 +1,4 @@
++import { CacheProvider } from "@emotion/react";
+ import {
+   createTheme,
+   ThemeProvider,
+@@ -13,6 +14,34 @@ import {
+ } from "@mui/material";
+ import Brightness4Icon from "@mui/icons-material/Brightness4";
+ import Brightness7Icon from "@mui/icons-material/Brightness7";
++import createCache, { StylisPlugin } from "@emotion/cache";
++
++const wrapInLayer: (layerName: string) => StylisPlugin =
++  (layerName) => (node) => {
++    // if we're not at the root of a <style> tag, leave the tree intact
++    // if the node is an @layer rule, leave it intact
++    if (node.root || node.type === "@layer") return;
++
++    // if we're at the root, replace node with `@layer layerName { node }`
++    const child = { ...node, parent: node, root: node };
++    Object.assign(node, {
++      children: [child],
++      length: 6,
++      parent: null,
++      props: [layerName],
++      return: "",
++      root: null,
++      type: "@layer",
++      value: `@layer ${layerName}`,
++    });
++  };
++
++const cache = createCache({
++  key: "css",
++  // By default, Tailwind has layer "@components" configured
++  // from the main CSS file, so this will work.
++  stylisPlugins: [wrapInLayer("components")],
++});
+
+ function AppContent() {
+   const { mode, setMode } = useColorScheme();
+@@ -90,9 +119,11 @@ function App() {
+   });
+
+   return (
+-    <ThemeProvider theme={theme}>
+-      <AppContent />
+-    </ThemeProvider>
++    <CacheProvider value={cache}>
++      <ThemeProvider theme={theme}>
++        <AppContent />
++      </ThemeProvider>
++    </CacheProvider>
+   );
+ }
+
+```
+
+Then run the dev server, you should see styles of Material UI components under `@components` layer.
+
 ## Dark mode
 
 Follow [Tailwind docs](https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually) and update Material UI to use `.dark` selector.

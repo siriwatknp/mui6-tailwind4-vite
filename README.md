@@ -29,3 +29,15 @@ pnpm install @emotion/cache
 ## Dark mode
 
 Follow [Tailwind docs](https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually) and update Material UI to use `.dark` selector.
+
+## Tailwind Intellisense
+
+To enable autocompletion when using `className: "..."`, open the VS Code `settings.json` and add this
+
+```json
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["className\\s*:\\s*['\"]([^'\"]*)['\"]"]
+  ]
+}
+```

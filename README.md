@@ -94,6 +94,43 @@ Then run the dev server, you should see styles of Material UI components under `
 
 Follow [Tailwind docs](https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually) and update Material UI to use `.dark` selector.
 
+```diff
+diff --git a/src/index.css b/src/index.css
+index f1d8c73..9c0f814 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -1 +1,3 @@
+ @import "tailwindcss";
++
++@custom-variant dark (&:where(.dark, .dark *));
+
+```
+
+```diff
+diff --git a/src/App.tsx b/src/App.tsx
+index 154635b..2dad18b 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -48,6 +48,7 @@ function AppContent() {
+
+   return (
+     <Box
++      className="bg-gray-50 dark:bg-gray-900"
+       sx={{
+         bgcolor: "background.default",
+         color: "text.primary",
+@@ -112,6 +113,9 @@ function AppContent() {
+
+ function App() {
+   const theme = createTheme({
++    cssVariables: {
++      colorSchemeSelector: "class",
++    },
+     colorSchemes: {
+       light: true,
+       dark: true,
+```
+
 ## Tailwind Intellisense
 
 To enable autocompletion when using `className: "..."`, open the VS Code `settings.json` and add this

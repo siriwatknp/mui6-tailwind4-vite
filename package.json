@@ -10,11 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/cache": "11.14.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
-    "@mui/icons-material": "6.4.2",
-    "@mui/material": "6.4.2",
+    "@mui/icons-material": "https://pkg.csb.dev/mui/material-ui/commit/3409cb9f/@mui/icons-material",
+    "@mui/material": "https://pkg.csb.dev/mui/material-ui/commit/3409cb9f/@mui/material",
     "@tailwindcss/vite": "4.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
